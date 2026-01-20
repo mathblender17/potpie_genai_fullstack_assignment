@@ -1,9 +1,17 @@
 from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIModel
 from models import DecisionInput, DecisionOutput
 import os
 
 # MODEL ALT :-
 #model="openrouter:qwen/qwen-2.5-7b-instruct" 
+# Explicitly setup the model to avoid "protocol" errors
+model = OpenAIModel(
+    'meta-llama/llama-3.1-8b-instruct',
+    base_url='https://openrouter.ai/api/v1',
+    api_key=os.getenv('OPENROUTER_API_KEY')
+)
+
 
 agent = Agent(
     model="openrouter:meta-llama/llama-3.1-8b-instruct",
