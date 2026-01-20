@@ -1,24 +1,29 @@
 from pydantic_ai import Agent
-# Use the modern import for the OpenAI model wrapper
+# 1. Import OpenAIModel and the new OpenAIProvider
 try:
     from pydantic_ai.models.openai import OpenAIModel
+    from pydantic_ai.providers.openai import OpenAIProvider
 except ImportError:
+    # Fallback for some versions, though unlikely needed now
     from pydantic_ai.models.openai import OpenAIChatModel as OpenAIModel
+    from pydantic_ai.providers.openai import OpenAIProvider
 
 from models import DecisionInput, DecisionOutput
 import os
 
-# 1. Setup the model with the API Key
+# 2. Configure the model using the Provider (The New Way)
+# We map OpenRouter config to the OpenAI provider
 model = OpenAIModel(
     'meta-llama/llama-3.1-8b-instruct',
-    base_url='https://openrouter.ai/api/v1',
-    api_key=os.getenv('OPENROUTER_API_KEY')
+    provider=OpenAIProvider(
+        base_url='https://openrouter.ai/api/v1',
+        api_key=os.getenv('OPENROUTER_API_KEY')
+    )
 )
 
+# 3. Initialize Agent
 agent = Agent(
-    # 2. CRITICAL FIX: Use the 'model' variable we defined above, 
-    # otherwise the API key is ignored!
-    model=model, 
+    model=model,
     system_prompt=(
         "You are a decision-clarifying assistant.\n"
         "Your job is to help users choose between options.\n"
@@ -31,13 +36,11 @@ agent = Agent(
         "The confidence_score MUST be an integer between 1 and 10.\n"
         "Return structured output only."
     ),
-    # 3. CRITICAL FIX: 'result_type' was removed from Agent() in newer versions.
-    # We must pass it in .run() instead.
     retries=2
 )
 
 async def run_decision_agent(input: DecisionInput) -> DecisionOutput:
-    # 4. CRITICAL FIX: Pass result_type here to enforce structured output
+    # 4. Pass output_type (previously result_type) in run()
     response = await agent.run(
         f"""
 Decision: {input.decision}
@@ -53,5 +56,4 @@ Urgency: {input.urgency}
         result_type=DecisionOutput
     )
     
-    # 5. CRITICAL FIX: Modern versions return the data directly in .data
     return response.data
