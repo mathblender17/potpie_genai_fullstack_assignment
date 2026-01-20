@@ -6,10 +6,11 @@ DecideForMe - AI Decision Assistant
 🚀 Live Demo
 ------------
 
-*   **Frontend (Vercel):** \[Insert your Vercel URL here\]
+*   **Frontend (Vercel):** [https://potpie-genai-fullstack-assignment-3f2eer74q.vercel.app/]
     
 *   **Backend (Render):** https://decideforme-backend.onrender.com/docs (Swagger UI)
-    
+
+*   **Video Demo:** https://www.loom.com/share/6ae11b78d3144ab5b9aa78f2a599fd8d
 
 ✨ Features
 ----------
