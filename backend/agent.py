@@ -1,18 +1,16 @@
 from pydantic_ai import Agent
-# 1. Import OpenAIModel and the new OpenAIProvider
+# Try importing the model class; modern versions use OpenAIChatModel
 try:
     from pydantic_ai.models.openai import OpenAIModel
     from pydantic_ai.providers.openai import OpenAIProvider
 except ImportError:
-    # Fallback for some versions, though unlikely needed now
     from pydantic_ai.models.openai import OpenAIChatModel as OpenAIModel
     from pydantic_ai.providers.openai import OpenAIProvider
 
 from models import DecisionInput, DecisionOutput
 import os
 
-# 2. Configure the model using the Provider (The New Way)
-# We map OpenRouter config to the OpenAI provider
+# 1. Configure the model
 model = OpenAIModel(
     'meta-llama/llama-3.1-8b-instruct',
     provider=OpenAIProvider(
@@ -21,7 +19,7 @@ model = OpenAIModel(
     )
 )
 
-# 3. Initialize Agent
+# 2. Initialize Agent with 'output_type' (New Syntax)
 agent = Agent(
     model=model,
     system_prompt=(
@@ -36,11 +34,12 @@ agent = Agent(
         "The confidence_score MUST be an integer between 1 and 10.\n"
         "Return structured output only."
     ),
+    output_type=DecisionOutput,  # CHANGED: result_type -> output_type
     retries=2
 )
 
 async def run_decision_agent(input: DecisionInput) -> DecisionOutput:
-    # 4. Pass output_type (previously result_type) in run()
+    # 3. Call run() without the type argument
     response = await agent.run(
         f"""
 Decision: {input.decision}
@@ -52,8 +51,8 @@ Constraints:
 {input.constraints or "None"}
 
 Urgency: {input.urgency}
-""",
-        result_type=DecisionOutput
+"""
     )
     
-    return response.data
+    # 4. Return .output (New Syntax)
+    return response.output # CHANGED: .data -> .output
