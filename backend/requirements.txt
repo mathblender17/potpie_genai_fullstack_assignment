@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-pydantic
-pydantic-ai==0.0.14
 python-dotenv
-griffe
+
+pydantic-ai==0.0.14
+griffe==0.36.4
