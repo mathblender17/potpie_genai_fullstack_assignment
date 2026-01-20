@@ -1,4 +1,4 @@
-from pydantic_ai_slim import Agent
+from pydantic_ai import Agent
 from models import DecisionInput, DecisionOutput
 import os
 
