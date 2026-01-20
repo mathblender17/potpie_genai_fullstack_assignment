@@ -70,8 +70,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://decideforme-backend.onrender.com/decide
-", {
+      const response = await fetch("https://decideforme-backend.onrender.com/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
