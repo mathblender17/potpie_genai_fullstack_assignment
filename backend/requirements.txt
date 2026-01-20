@@ -3,3 +3,4 @@ uvicorn
 pydantic
 pydantic-ai==0.0.14
 python-dotenv
+griffe
