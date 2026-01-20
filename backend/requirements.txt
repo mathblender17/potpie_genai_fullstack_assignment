@@ -1,5 +1,5 @@
 fastapi
 uvicorn
 pydantic
-pydantic-ai
+pydantic-ai==0.0.14
 python-dotenv
